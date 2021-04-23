@@ -30,7 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
 
-        car = new Car(200, 300, R.drawable.carblue, getResources());
+        car = new Car(400, 700, R.drawable.carblue, getResources());
 
         background2.y = -screenY;
 
@@ -69,6 +69,7 @@ public class GameView extends SurfaceView implements Runnable {
         if(getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
 
+            // draw objects on the screen
             canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
             canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
             canvas.drawBitmap(car.car, car.x, car.y, paint);

@@ -11,9 +11,11 @@
         android:theme="@style/Theme.GameTest">
         <activity android:name=".GameActivity"
             android:screenOrientation="landscape"
+            android:theme="@style/Theme.GameTest.noApplicationBar"
             />
         <activity android:name=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.GameTest.noApplicationBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

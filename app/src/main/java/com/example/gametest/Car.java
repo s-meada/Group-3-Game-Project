@@ -19,13 +19,18 @@ public class Car {
      * @param res
      */
     Car(int x, int y, int id, Resources res) {
+        this.x = x;
+        this.y = y;
+
         car = BitmapFactory.decodeResource(res, id);
 
         width = car.getWidth();
         height = car.getHeight();
         // reduce the car's size
-        width /= 10;
-        height /= 10;
+        width /= 4;
+        height /= 4;
+
+        car = Bitmap.createScaledBitmap(car, width, height, false);
     }
 
     Rect getCollisionShape () {

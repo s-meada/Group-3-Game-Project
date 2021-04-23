@@ -9,7 +9,6 @@ public class Background {
     Bitmap background;
 
     Background (int screenX, int screenY, Resources res) {
-        // TODO: Add a background image named background in the drawable folder
         background = BitmapFactory.decodeResource(res, R.drawable.background);
         // scale background to the screen size
         background = Bitmap.createScaledBitmap(background, screenX, screenY, false);
