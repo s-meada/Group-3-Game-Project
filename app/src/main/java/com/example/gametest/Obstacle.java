@@ -3,11 +3,13 @@ package com.example.gametest;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 public class Obstacle {
 
-    public int x, y;
+    public int x, y, width, height;
     Bitmap image;
+
 
     /**
      *
@@ -16,8 +18,29 @@ public class Obstacle {
      * @param id The image "path" (e.g. R.drawable.obstacle)
      * @param res
      */
-    Obstacle (int x, int y, int width, int height, int id, Resources res) {
+    public Obstacle (int x, int y, int id, Resources res) {
+        this(id, res);
+
+        this.x = x;
+        this.y = y;
+    }
+
+    // Only use if you intend to assign the other values later
+    public Obstacle (int id, Resources res) {
         image = BitmapFactory.decodeResource(res, id);
 
+        width = image.getWidth();
+        height = image.getHeight();
+        // reduce the car's size
+        width /= 8;
+        height /= 8;
+
+        image = Bitmap.createScaledBitmap(image, width, height, false);
+
     }
+
+    public Rect getCollisionShape () {
+        return new Rect(x, y, x + width - 5, y + height - 40);
+    }
+
 }

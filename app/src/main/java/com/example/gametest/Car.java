@@ -34,6 +34,6 @@ public class Car {
     }
 
     Rect getCollisionShape () {
-        return new Rect(x, y, x + width, y + height);
+        return new Rect(x + 120, y + 42, x + width - 20, y + height - 10);
     }
 }
