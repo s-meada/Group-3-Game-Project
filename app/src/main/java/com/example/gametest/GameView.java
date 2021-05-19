@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
@@ -186,6 +187,23 @@ public class GameView extends SurfaceView implements Runnable {
             e.printStackTrace();
         }
 
+    }
+    public boolean OnTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                car.setActionDown(true);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if(car.getActionDown()) {
+                    car.setPosition(car.x + (event.getX() - x), car.y);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                car.setActionDown(false);
+                break;
+        }
+        return true;
     }
 
 }
