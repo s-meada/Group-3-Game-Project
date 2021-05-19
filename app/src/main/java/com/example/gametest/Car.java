@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
 public class Car {
-    int x, y, width, height;
-
+    float x, y, width, height;
+    private boolean actionDown = false;
     Bitmap car;
 
 
@@ -16,7 +16,7 @@ public class Car {
      * @param x x coordinate on the screen
      * @param y y coordinate on the screen
      * @param id The image "path" (e.g. R.drawable.car)
-     * @param res
+     * @param res resource
      */
     Car(int x, int y, int id, Resources res) {
         this.x = x;
@@ -30,10 +30,21 @@ public class Car {
         width /= 4;
         height /= 4;
 
-        car = Bitmap.createScaledBitmap(car, width, height, false);
+        car = Bitmap.createScaledBitmap(car, (int) width, (int) height, false);
+    }
+    public void setActionDown(boolean actionDown) {
+        this.actionDown = actionDown;
+    }
+    Rect getCollisionShape () {
+        return new Rect((int)x + 120, (int)y + 42, (int)x + (int) width - 20, (int)y + (int)height - 10);
     }
 
-    Rect getCollisionShape () {
-        return new Rect(x + 120, y + 42, x + width - 20, y + height - 10);
+    public boolean getActionDown() {
+        return actionDown;
+    }
+
+    public void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
 }
