@@ -188,15 +188,14 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
     }
-    public boolean OnTouchEvent(MotionEvent event) {
-        float x = event.getX();
+    public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 car.setActionDown(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(car.getActionDown()) {
-                    car.setPosition(car.x + (event.getX() - x), car.y);
+                    car.setPosition(event.getX(), car.y);
                 }
                 break;
             case MotionEvent.ACTION_UP:
