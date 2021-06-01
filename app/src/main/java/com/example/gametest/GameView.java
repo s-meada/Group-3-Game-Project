@@ -48,7 +48,7 @@ public class GameView extends SurfaceView implements Runnable {
         paint = new Paint();
 
         // number of obstacles on screen
-        obstacles = new Obstacle[40];
+        obstacles = new Obstacle[4];
 
         // assign each index of the obstacles array to an obstacle
         random = new Random();
