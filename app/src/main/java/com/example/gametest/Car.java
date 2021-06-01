@@ -36,7 +36,7 @@ public class Car {
         this.actionDown = actionDown;
     }
     Rect getCollisionShape () {
-        return new Rect((int)x + 120, (int)y + 42, (int)x + (int) width - 20, (int)y + (int)height - 10);
+        return new Rect((int)x, (int)y + 42, (int)x + (int) width - 30, (int)y + (int)height - 10);
     }
 
     public boolean getActionDown() {
