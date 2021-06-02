@@ -31,16 +31,16 @@ public class Obstacle {
 
         width = image.getWidth();
         height = image.getHeight();
-        // reduce the car's size
-        width /= 8;
-        height /= 8;
+        // reduce the obstacle's size
+        width /= 4;
+        height /= 6;
 
         image = Bitmap.createScaledBitmap(image, width, height, false);
 
     }
 
     public Rect getCollisionShape () {
-        return new Rect(x, y, x + width - 5, y + height - 40);
+        return new Rect(x + 30, y + 20, x + width - 50, y + height - 50);
     }
 
 }
