@@ -30,6 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
+        isPlaying = true;
         this.activity = activity;
         prefs = activity.getSharedPreferences("game", Context.MODE_PRIVATE);
         this.screenX = screenX;
@@ -137,9 +138,13 @@ public class GameView extends SurfaceView implements Runnable {
             if(isGameOver) {
                 isPlaying = false;
                 // [death animation]
-
+                canvas.drawBitmap(background1.background, 0, 0, paint);
+                canvas.drawText("Game Over", screenX/2 - 250, screenY/2, paint);
+                paint.setTextSize(75);
+                canvas.drawText("Score: " + score, screenX/2 - 175, screenY/2 + 100, paint);
                 System.out.println("GAME OVER!");
                 waitBeforeExiting();
+                getHolder().unlockCanvasAndPost(canvas);
                 return;
             }
             // post canvas on the screen
@@ -183,8 +188,9 @@ public class GameView extends SurfaceView implements Runnable {
 
         try {
             Thread.sleep(3000);
-            activity.startActivity(new Intent(activity, MainActivity.class));
-            activity.finish();
+//            activity.startActivity(new Intent(activity, MainActivity.class));
+            // Finish the game activity
+//            activity.finish();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
