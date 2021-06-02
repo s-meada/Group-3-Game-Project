@@ -3,7 +3,6 @@ package com.example.gametest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,8 +10,6 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -27,26 +24,25 @@ public class GameView extends SurfaceView implements Runnable {
     private Obstacle[] obstacles;
     private Random random;
     Paint paint;
+    long t0=0;
+    private long score;
     Car car;
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
-
         this.activity = activity;
         prefs = activity.getSharedPreferences("game", Context.MODE_PRIVATE);
         this.screenX = screenX;
         this.screenY = screenY;
-
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
-
         car = new Car(400, 700, R.drawable.carblue, getResources());
-
         background2.y = -screenY;
 
         // paint object that will draw everything onto the canvas
         paint = new Paint();
-
+        paint.setTextSize(100);
+        paint.setColor(Color.WHITE);
         // number of obstacles on screen
         obstacles = new Obstacle[4];
 
@@ -61,6 +57,7 @@ public class GameView extends SurfaceView implements Runnable {
             obstacles[i].y = -(random.nextInt(screenY) + obstacles[i].height);
 //            System.out.println("OBSTACLE: " + obstacles[i].x + ", " + obstacles[i].y);
         }
+        t0 = System.nanoTime();
 
 
     }
@@ -77,6 +74,8 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
+        long t1 = System.nanoTime();
+        score = (long) ((t1-t0) * 0.00000001);
         // background moves
         background1.y += 10;
         background2.y += 10;
@@ -107,6 +106,7 @@ public class GameView extends SurfaceView implements Runnable {
             if(Rect.intersects(car.getCollisionShape(), obstacle.getCollisionShape())) {
                 // end the game if the car collides with an obstacle
                 isGameOver = true;
+
                 break;
             }
 
@@ -119,8 +119,10 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = getHolder().lockCanvas();
 
             // draw objects on the screen
+
             canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
             canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
+
             canvas.drawBitmap(car.car, car.x, car.y, paint);
 
             // draw obstacles
@@ -129,6 +131,7 @@ public class GameView extends SurfaceView implements Runnable {
                     canvas.drawBitmap(obstacle.image, obstacle.x, obstacle.y, paint);
                 }
             }
+            canvas.drawText(String.valueOf(score),300,200, paint);
 
             // when the game is over
             if(isGameOver) {
@@ -139,7 +142,6 @@ public class GameView extends SurfaceView implements Runnable {
                 waitBeforeExiting();
                 return;
             }
-
             // post canvas on the screen
             getHolder().unlockCanvasAndPost(canvas);
         }
