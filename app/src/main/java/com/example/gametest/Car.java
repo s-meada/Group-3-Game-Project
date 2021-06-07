@@ -43,8 +43,12 @@ public class Car {
         return actionDown;
     }
 
+    // mvoe car
     public void setPosition(float x, float y) {
-        this.x = x;
+        // bound the car to be within screen
+        if (x >= width/2 && x <= screenX-width/2){
+            this.x = x - width/2;
+        }
         this.y = y;
     }
 }
