@@ -23,10 +23,13 @@ public class GameView extends SurfaceView implements Runnable {
     private Background background1, background2;
     private Obstacle[] obstacles;
     private Random random;
-    Paint paint;
-    long t0=0;
+    private SoundPool soundPool;
+    private int sound;
+    private Paint paint;
+    private long t0=0;
     private long score;
-    Car car;
+    private Car car;
+    private MediaPlayer mediaPlayer;
 
     public GameView(GameActivity activity, int screenX, int screenY) {
         super(activity);
@@ -56,10 +59,25 @@ public class GameView extends SurfaceView implements Runnable {
             obstacles[i].x = random.nextInt(screenX - obstacles[i].width);
             // obstacles start off of the screen and will get to the screen at a random time
             obstacles[i].y = -(random.nextInt(screenY) + obstacles[i].height);
-//            System.out.println("OBSTACLE: " + obstacles[i].x + ", " + obstacles[i].y);
+            // System.out.println("OBSTACLE: " + obstacles[i].x + ", " + obstacles[i].y);
         }
         t0 = System.nanoTime();
-
+        // sets up short sounds to be played, instantiating soundPool
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .build();
+            soundPool = new SoundPool.Builder()
+                    .setAudioAttributes(audioAttributes).build();
+        } else {
+            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        }
+        // sets the boom sound ready
+        sound = soundPool.load(activity, R.raw.boom, 1);
+        // instantiates and plays bgm
+        mediaPlayer = MediaPlayer.create(activity, R.raw.bgm);
+        mediaPlayer.start();
 
     }
 
@@ -95,9 +113,14 @@ public class GameView extends SurfaceView implements Runnable {
 
             // for obstacles that move off the screen
             if(obstacle.y > screenY) {
+                // for obstacles that move off the screen
+            if(obstacle.y > screenY) {
                 // make a new obstacle on the screen
-                obstacle.y = -(random.nextInt(50) + obstacle.height);
-                obstacle.x = random.nextInt(screenY - obstacle.height);
+                //obstacle.y = -(random.nextInt(50) + obstacle.height);
+                obstacle.y = -(random.nextInt(screenY));
+                //obstacle.x = random.nextInt(screenY - obstacle.height);
+                obstacle.x = random.nextInt(screenX - obstacle.width);
+            }
             }
 
             // update movement of obstacle (same speed as car)
@@ -105,9 +128,12 @@ public class GameView extends SurfaceView implements Runnable {
 
             // check for collisions between car and obstacles
             if(Rect.intersects(car.getCollisionShape(), obstacle.getCollisionShape())) {
+                // stops bgm
+                mediaPlayer.stop();
+                // play boom sound
+                soundPool.play(sound, 100, 100, 1, 0, 1);
                 // end the game if the car collides with an obstacle
                 isGameOver = true;
-
                 break;
             }
 
@@ -196,16 +222,22 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
     }
+    // method gets called whenever the screen is touched
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
+            // press down
             case MotionEvent.ACTION_DOWN:
-                car.setActionDown(true);
+                if (event.getX() >= car.x && event.getX() <= car.x + car.width) {
+                    car.setActionDown(true);
+                }
                 break;
+            // finger moved along screen
             case MotionEvent.ACTION_MOVE:
                 if(car.getActionDown()) {
                     car.setPosition(event.getX(), car.y);
                 }
                 break;
+            // finger released
             case MotionEvent.ACTION_UP:
                 car.setActionDown(false);
                 break;
