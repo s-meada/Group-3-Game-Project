@@ -40,7 +40,7 @@ public class Obstacle {
     }
 
     public Rect getCollisionShape () {
-        return new Rect(x + 30, y + 20, x + width - 50, y + height - 50);
+        return new Rect(x + 100, y + 100, x + width - 150, y + height - 75);
     }
 
 }
